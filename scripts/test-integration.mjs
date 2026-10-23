@@ -20,7 +20,7 @@ try {
   const port = run('docker', ['port', container, '5432/tcp']).split(':').at(-1);
   const sql = 'CREATE ROLE anon; CREATE ROLE authenticated;\n' + readFileSync('supabase/sql/20261023_asisco_grupo_1.sql', 'utf8');
   run('docker', ['exec', '-i', container, 'psql', '-U', 'postgres', '-d', 'registro_test', '-v', 'ON_ERROR_STOP=1', '-q'], { input: sql });
-  const result = spawnSync('npm', ['test'], { stdio: 'inherit', env: { ...process.env, TEST_DATABASE_URL: `postgresql://postgres:local_test_only@127.0.0.1:${port}/registro_test` } });
+  const result = spawnSync('npm', ['test'], { stdio: 'inherit', env: { ...process.env, JWT_SECRET: 'prueba-local-grupo-1-clave-no-productiva-2026', TEST_DATABASE_URL: `postgresql://postgres:local_test_only@127.0.0.1:${port}/registro_test` } });
   process.exitCode = result.status ?? 1;
 } finally {
   spawnSync('docker', ['stop', container], { stdio: 'ignore' });

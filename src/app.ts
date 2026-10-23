@@ -16,6 +16,6 @@ const errorHandler: ErrorRequestHandler = (error, _req, res, _next) => {
     res.status(413).json({ error: "Solicitud demasiado grande" });
     return;
   }
-  res.status(503).json({ error: "No se pudo completar el registro. Intente más tarde" });
+  res.status(503).json({ error: "No se pudo completar la solicitud. Intente más tarde" });
 };
 app.use(errorHandler);

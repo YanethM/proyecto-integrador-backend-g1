@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Registro grupo 1",
+    "title": "Autenticación grupo 1",
     "version": "1.0.0"
   },
   "servers": [
@@ -21,16 +21,11 @@
                 "type": "object",
                 "additionalProperties": false,
                 "required": [
-                  "nombre",
+                  "nombres",
                   "correo",
                   "clave"
                 ],
                 "properties": {
-                  "nombre": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 150
-                  },
                   "correo": {
                     "type": "string",
                     "format": "email",
@@ -41,6 +36,31 @@
                     "minLength": 12,
                     "description": "Máximo 72 bytes UTF-8",
                     "writeOnly": true
+                  },
+                  "nombres": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 150
+                  },
+                  "apellidos": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 150
+                  },
+                  "celular": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 30
+                  },
+                  "tipoDocumento": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 30
+                  },
+                  "numeroDocumento": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 50
                   }
                 }
               }
@@ -49,13 +69,13 @@
         },
         "responses": {
           "201": {
-            "description": "Usuario creado; devuelve id, nombre, correo y creadoEn, sin clave"
+            "description": "Usuario UUID y perfil creados en una transacción; devuelve id, correo, creadoEn y perfil, sin clave"
           },
           "400": {
             "description": "Datos o JSON inválidos"
           },
           "409": {
-            "description": "Correo ya registrado"
+            "description": "Correo o documento ya registrado"
           },
           "413": {
             "description": "Cuerpo mayor de 16 KB"
@@ -67,6 +87,84 @@
             "description": "Registro no disponible"
           }
         }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Iniciar sesión con correo y clave",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "correo",
+                  "clave"
+                ],
+                "properties": {
+                  "correo": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "clave": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Máximo 72 bytes UTF-8"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token JWT válido por 2 horas y datos públicos del usuario"
+          },
+          "400": {
+            "description": "Datos inválidos"
+          },
+          "401": {
+            "description": "Credenciales inválidas o cuenta no activa"
+          },
+          "429": {
+            "description": "Demasiados intentos"
+          },
+          "503": {
+            "description": "Servicio no disponible"
+          }
+        }
+      }
+    },
+    "/auth/perfil": {
+      "get": {
+        "summary": "Consultar perfil del usuario autenticado",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "id, correo, creadoEn y perfil del usuario"
+          },
+          "401": {
+            "description": "Token inválido, vencido o usuario no activo"
+          },
+          "503": {
+            "description": "Servicio no disponible"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }

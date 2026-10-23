@@ -1,5 +1,6 @@
 {
-  "nombre": "Ana Peña",
+  "nombres": "Ana",
+  "apellidos": "Peña",
   "correo": "registro-postman@example.com",
   "clave": "ClaveDePrueba123!"
 }

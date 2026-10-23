@@ -1,12 +1,15 @@
 import { Router } from "express";
 import { rateLimit } from "express-rate-limit";
-import { registrarUsuario } from "../controladores/auth.js";
+import { registrarUsuario, iniciarSesion, obtenerPerfil } from "../controladores/auth.js";
 
 export const authRouter = Router();
-authRouter.post("/registro", rateLimit({
+const limitarIntentos = rateLimit({
   windowMs: 15 * 60 * 1000,
   limit: 20,
   standardHeaders: "draft-8",
   legacyHeaders: false,
   message: { error: "Demasiados intentos. Intente más tarde" },
-}), registrarUsuario);
+});
+authRouter.post("/registro", limitarIntentos, registrarUsuario);
+authRouter.post("/login", limitarIntentos, iniciarSesion);
+authRouter.get("/perfil", obtenerPerfil);

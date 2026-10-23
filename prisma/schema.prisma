@@ -1,0 +1,37 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas  = ["grupo_1"]
+}
+
+model Usuario {
+  id       String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  correo   String   @unique
+  clave    String
+  creadoEn DateTime @default(now()) @map("creado_en") @db.Timestamptz(6)
+  perfil   Perfil?
+
+  @@map("usuarios")
+  @@schema("grupo_1")
+}
+
+model Perfil {
+  id                       String    @id @db.Uuid
+  nombres                  String    @default("")
+  apellidos                String?
+  celular                  String?
+  tipoDocumento            String?   @map("tipo_documento")
+  numeroDocumento          String?   @unique @map("numero_documento")
+  estado                   String    @default("activo")
+  aceptoTratamientoDatosEn  DateTime? @map("acepto_tratamiento_datos_en") @db.Timestamptz(6)
+  creadoEn                 DateTime  @default(now()) @map("creado_en") @db.Timestamptz(6)
+  actualizadoEn            DateTime  @default(now()) @map("actualizado_en") @db.Timestamptz(6)
+  usuario                  Usuario   @relation(fields: [id], references: [id], onDelete: Cascade)
+
+  @@map("perfiles")
+  @@schema("grupo_1")
+}

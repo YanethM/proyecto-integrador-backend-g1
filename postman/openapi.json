@@ -1,0 +1,73 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Registro grupo 1",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:3001"
+    }
+  ],
+  "paths": {
+    "/auth/registro": {
+      "post": {
+        "summary": "Registrar usuario del grupo 1",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "nombre",
+                  "correo",
+                  "clave"
+                ],
+                "properties": {
+                  "nombre": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 150
+                  },
+                  "correo": {
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 254
+                  },
+                  "clave": {
+                    "type": "string",
+                    "minLength": 12,
+                    "description": "Máximo 72 bytes UTF-8",
+                    "writeOnly": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Usuario creado; devuelve id, nombre, correo y creadoEn, sin clave"
+          },
+          "400": {
+            "description": "Datos o JSON inválidos"
+          },
+          "409": {
+            "description": "Correo ya registrado"
+          },
+          "413": {
+            "description": "Cuerpo mayor de 16 KB"
+          },
+          "429": {
+            "description": "Más de 20 intentos por IP en 15 minutos"
+          },
+          "503": {
+            "description": "Registro no disponible"
+          }
+        }
+      }
+    }
+  }
+}

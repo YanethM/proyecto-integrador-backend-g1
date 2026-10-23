@@ -12,7 +12,7 @@ try {
   run('docker', ['run', '--rm', '-d', '--name', container, '-e', 'POSTGRES_PASSWORD=local_test_only', '-e', 'POSTGRES_DB=registro_test', '-p', '127.0.0.1::5432', 'postgres:17-alpine']);
   let ready = false;
   for (let attempt = 0; attempt < 30; attempt++) {
-    const result = spawnSync('docker', ['exec', container, 'pg_isready', '-U', 'postgres']);
+    const result = spawnSync('docker', ['exec', container, 'pg_isready', '-h', '127.0.0.1', '-U', 'postgres']);
     if (result.status === 0) { ready = true; break; }
     await setTimeout(500);
   }
@@ -22,6 +22,10 @@ try {
   run('docker', ['exec', '-i', container, 'psql', '-U', 'postgres', '-d', 'registro_test', '-v', 'ON_ERROR_STOP=1', '-q'], { input: sql });
   const result = spawnSync('npm', ['test'], { stdio: 'inherit', env: { ...process.env, JWT_SECRET: 'prueba-local-grupo-1-clave-no-productiva-2026', TEST_DATABASE_URL: `postgresql://postgres:local_test_only@127.0.0.1:${port}/registro_test` } });
   process.exitCode = result.status ?? 1;
+  if (process.exitCode === 0) {
+    const smoke = spawnSync('node', ['scripts/smoke-build.mjs'], { stdio: 'inherit', env: { ...process.env, DATABASE_URL: `postgresql://postgres:local_test_only@127.0.0.1:${port}/registro_test`, JWT_SECRET: 'prueba-local-grupo-1-clave-no-productiva-2026' } });
+    process.exitCode = smoke.status ?? 1;
+  }
 } finally {
   spawnSync('docker', ['stop', container], { stdio: 'ignore' });
 }

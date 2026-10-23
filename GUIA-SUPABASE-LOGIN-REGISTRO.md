@@ -26,7 +26,7 @@ npm run check:config
 npm run dev
 ```
 
-El puerto local predeterminado es `3001`. La API escucha en `127.0.0.1`; un despliegue requerirá configurar `HOST`, conexión, TLS y acceso desde el frontend.
+El puerto local predeterminado es `3001`. La API local escucha en `127.0.0.1`. Para Render, seguir [DESPLIEGUE-RENDER.md](DESPLIEGUE-RENDER.md), que configura host, conexión y CORS.
 
 ## Registro
 

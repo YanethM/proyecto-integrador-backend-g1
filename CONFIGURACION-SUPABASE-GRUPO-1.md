@@ -219,10 +219,10 @@ El contrato de la API está en [postman/openapi.json](postman/openapi.json).
 
 Después de editar `.env`, reiniciar el backend.
 
-## 12. Antes del despliegue
+## 12. Desplegar en Render
 
-La configuración anterior deja el servicio funcionando localmente. Para publicarlo, el equipo debe configurar las variables como secretos en su proveedor, usar HTTPS y establecer `HOST=0.0.0.0` y el puerto requerido por ese proveedor.
+Seguir [DESPLIEGUE-RENDER.md](DESPLIEGUE-RENDER.md). El proyecto incluye `render.yaml`, compilación de producción, `/health` y CORS configurable mediante `CORS_ORIGINS`.
 
-Si el frontend y la API estarán en orígenes distintos, configurar CORS para los orígenes autorizados; el backend actual no incluye esa configuración. Revisar también el proxy del proveedor para que el límite por IP funcione como se espera.
+En desarrollo local, agregar a `.env` los orígenes de los frontends separados por comas, por ejemplo `CORS_ORIGINS="http://localhost:5173,http://localhost:3000"`. No incluir rutas ni barra final.
 
-Antes de compartir la URL pública, repetir registro, login y perfil en el entorno desplegado. Entregar a los equipos consumidores únicamente la URL de la API y su contrato. La configuración y el despliegue remotos quedan a cargo del grupo 1.
+El grupo 1 administra Render y Supabase. Los consumidores reciben la URL HTTPS del backend y el contrato de la API; no reciben credenciales de base de datos ni el secreto JWT.

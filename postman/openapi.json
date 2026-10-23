@@ -85,6 +85,9 @@
           },
           "503": {
             "description": "Registro no disponible"
+          },
+          "403": {
+            "description": "Origen del frontend no autorizado"
           }
         }
       }
@@ -133,6 +136,9 @@
           },
           "503": {
             "description": "Servicio no disponible"
+          },
+          "403": {
+            "description": "Origen del frontend no autorizado"
           }
         }
       }
@@ -154,6 +160,22 @@
           },
           "503": {
             "description": "Servicio no disponible"
+          },
+          "403": {
+            "description": "Origen del frontend no autorizado"
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Comprobar disponibilidad del backend y PostgreSQL",
+        "responses": {
+          "200": {
+            "description": "status: ok"
+          },
+          "503": {
+            "description": "status: unavailable"
           }
         }
       }
